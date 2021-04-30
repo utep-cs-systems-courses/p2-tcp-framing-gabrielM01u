@@ -59,11 +59,17 @@ while len(outMessage):
 data = s.recv(1024).decode()
 print("Received '%s'" % data)
 
-outMessage = "Hello world!"
-while len(outMessage):
-    print("sending '%s'" % outMessage)
-    bytesSent = s.send(outMessage.encode())
-    outMessage = outMessage[bytesSent:]
+outMessage = "50001:50001:0001:0001:1:512"
+# while len(outMessage):
+#     print("sending '%s'" % outMessage)
+#     bytesSent = s.send(outMessage.encode())
+#     print("Bytes sent: "+str(bytesSent))
+#     outMessage = outMessage[bytesSent:]
+
+print("sending '%s'" % outMessage)
+bytesSent = s.send(outMessage.encode())
+print("Bytes sent: "+str(bytesSent))
+outMessage = outMessage[bytesSent:]
 
 s.shutdown(socket.SHUT_WR)      # no more output
 
