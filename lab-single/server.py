@@ -12,19 +12,19 @@ def listener_thread(s,conn,addr, threadCount):
     ack = 0
     while True:
         data = conn.recv(2048)
-        if tcp_logic(data) == 1:
-            ack = 1
-            s.send(packet.synack_packet(rport,ack))
-            ack = 0
-        elif tcp_logic(data) == 2:
-            s.send(packet.)
+        # if tcp_logic(data) == 1:
+        #     ack = 1
+        #     s.send(packet.synack_packet(rport,ack))
+        #     ack = 0
+        # elif tcp_logic(data) == 2:
+        #     s.send(packet.)
         if not data:
             break
     print("Disconnecting: " + addr[0])
     conn.close()
 
 def tcp_logic(data):
-
+# colon:filename:bytesfile
     if data and len(data) == 14:
         if data[:13] == b'\x01':
             print('SYN recvd')
