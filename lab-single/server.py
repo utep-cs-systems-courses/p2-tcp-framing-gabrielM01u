@@ -1,5 +1,5 @@
 import socket, sys, re, os
-from framing import frame
+
 from threading import Thread
 
 
@@ -8,30 +8,24 @@ threadCount = 0
 
 def listener_thread(s,conn,addr, threadCount):
     id = threadCount
-    rport = addr[1]
-    ack = 0
-    while True:
-        data = conn.recv(2048)
-        # if tcp_logic(data) == 1:
-        #     ack = 1
-        #     s.send(packet.synack_packet(rport,ack))
-        #     ack = 0
-        # elif tcp_logic(data) == 2:
-        #     s.send(packet.)
-        if not data:
-            break
+    data = conn.recv(1024).decode().split(':')
+    file_name = data[1]
+    if not os.path.isfile(file_name):
+        fd = os.open(file_name, os.O_CREAT | os.O_WRONLY)
+
+        while True:
+            data = conn.recv(1024).decode().split(':')
+            if not data:
+                break
+            len = data[0]
+            payload = data[1]
+            os.write(fd, payload)
+
+        os.close(fd)
+    
     print("Disconnecting: " + addr[0])
     conn.close()
 
-def tcp_logic(data):
-# colon:filename:bytesfile
-    if data and len(data) == 14:
-        if data[:13] == b'\x01':
-            print('SYN recvd')
-            return 1
-        elif data[:13] == b'\x02':
-            print('ACK recvd')
-            return 2
     
 
 listenPort = 8000
@@ -40,7 +34,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind(('', listenPort))
 s.listen(1) 
 
-packet = frame(listenPort, s)
+
 
 while(True):
     conn, addr = s.accept()
