@@ -33,8 +33,9 @@ threadCount = 0
 def listener_thread(s,conn,addr, threadCount):
     id = threadCount
     data = conn.recv(1024).decode()
-    if not data:
-        print("Conn empty")
+    while not data:
+        print("...")
+    
     # data = s.recv(1024).decode()
     # print(data)
     # file_name = data[1]

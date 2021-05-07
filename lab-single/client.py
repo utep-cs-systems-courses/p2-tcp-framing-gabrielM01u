@@ -66,7 +66,7 @@ s.listen(1)
 fd = os.open("../../test.txt", os.O_RDONLY|os.O_CREAT)
 assert fd >= 0
 conn, addr = s.accept()
-fileRequest = conn.send(('8:test.txt').encode())
+fileRequest = conn.send(('YO').encode())
 
 response = s.recv(1024).decode()
 response = response.split(':')
