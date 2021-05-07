@@ -65,7 +65,7 @@ s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 s.bind(('localhost', listenPort))
 s.listen(1)
 
-fd = os.open("../../test.txt", os.O_RDONLY|os.O_CREAT)
+fd = os.open("test.txt", os.O_RDONLY|os.O_CREAT)
 assert fd >= 0
 conn, addr = s.accept()
 fileRequest = conn.send(('YO').encode())
