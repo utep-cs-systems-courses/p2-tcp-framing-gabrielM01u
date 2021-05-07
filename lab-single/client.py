@@ -2,7 +2,7 @@ import socket, sys, re, os, time
 sys.path.append("../lib")       # for params
 import params
 switchesVarDefaults = (
-    (('-s', '--server'), 'server', "127.0.0.1:50001"),
+    (('-s', '--server'), 'server', "127.0.0.1:8000"),
     (('-d', '--delay'), 'delay', "0"),
     (('-?', '--usage'), "usage", False), # boolean (set if present)
     )
@@ -56,7 +56,7 @@ if delay != 0:
 
 
 
-listenPort = 8000
+listenPort = 8080
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -65,8 +65,8 @@ s.listen(1)
 
 fd = os.open("../../test.txt", os.O_RDONLY|os.O_CREAT)
 assert fd >= 0
-
-fileRequest = s.send(('8:test.txt').encode())
+conn, addr = s.accept()
+fileRequest = conn.send(('8:test.txt').encode())
 
 response = s.recv(1024).decode()
 response = response.split(':')

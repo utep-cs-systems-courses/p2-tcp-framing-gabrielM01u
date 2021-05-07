@@ -32,20 +32,24 @@ threadCount = 0
 
 def listener_thread(s,conn,addr, threadCount):
     id = threadCount
-    data = conn.recv(1024).decode().split(':')
-    file_name = data[1]
-    if not os.path.isfile(file_name):
-        fd = os.open(file_name, os.O_CREAT | os.O_WRONLY)
+    data = conn.recv(1024).decode()
+    if not data:
+        print("Conn empty")
+    # data = s.recv(1024).decode()
+    # print(data)
+    # file_name = data[1]
+    # if not os.path.isfile(file_name):
+    #     fd = os.open(file_name, os.O_CREAT | os.O_WRONLY)
 
-        while True:
-            data = conn.recv(1024).decode().split(':')
-            if not data:
-                break
-            len = data[0]
-            payload = data[1]
-            os.write(fd, payload)
+    #     while True:
+    #         data = conn.recv(1024).decode().split(':')
+    #         if not data:
+    #             break
+    #         len = data[0]
+    #         payload = data[1]
+    #         os.write(fd, payload)
 
-        os.close(fd)
+    #     os.close(fd)
     
     print("Disconnecting: " + addr[0])
     conn.close()
@@ -56,11 +60,12 @@ listenPort = 8000
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind(('', listenPort))
-s.listen(1) 
+s.listen(10) 
 
 
 
 while(True):
+    print("Here")
     conn, addr = s.accept()
     print('Connected to: ' + addr[0] + ':' + str(addr[1]))
     threadCount + 1
