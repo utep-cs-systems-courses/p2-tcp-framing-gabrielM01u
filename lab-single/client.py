@@ -8,14 +8,15 @@ listenPort = 8080
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-s.bind(('localhost', listenPort))
-s.listen(1)
+
 
 
 
 fd = os.open("test.txt", os.O_RDONLY|os.O_CREAT)
 assert fd >= 0
-conn, addr = s.accept()
+
+s.connect(('127.0.0.1',50001))
+
 fileRequest = s.send(('YO').encode())
 
 response = s.recv(1024).decode()

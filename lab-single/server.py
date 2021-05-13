@@ -19,7 +19,7 @@ progname = "echoserver"
 paramMap = params.parseParams(switchesVarDefaults)
 
 listenPort = paramMap['listenPort']
-listenAddr = ''       # Symbolic name meaning all available interfaces
+listenAddr = '127.0.0.1'       # Symbolic name meaning all available interfaces
 
 if paramMap['usage']:
     params.usage()
@@ -35,8 +35,10 @@ threadCount = 0
 def listener_thread(s,conn,addr, threadCount):
     id = threadCount
     data = conn.recv(1024).decode()
-    while not data:
+    while not data:   
         print("...")
+
+    print(data)
     
     # data = s.recv(1024).decode()
     # print(data)
@@ -59,11 +61,11 @@ def listener_thread(s,conn,addr, threadCount):
 
     
 
-listenPort = 8000
+# listenPort = 8000
 
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind(('', listenPort))
-s.listen(10) 
+# s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# s.bind(('', listenPort))
+# s.listen(10) 
 
 
 
@@ -74,4 +76,5 @@ while(True):
     threadCount + 1
     x = Thread(target=listener_thread, args=(s,conn,addr,threadCount))
     x.start()
+s.close()
 
