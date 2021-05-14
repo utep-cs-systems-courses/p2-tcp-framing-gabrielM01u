@@ -16,8 +16,8 @@ fd = os.open(filename, os.O_RDONLY|os.O_CREAT)
 assert fd >= 0
 
 s.connect(('127.0.0.1',50001))
-
-fileRequest = s.send((len(filename)+':'+filename).encode())
+msg = str(len(filename))+':'+filename
+fileRequest = s.send(msg.encode())
 
 response = s.recv(1024).decode()
 response = response.split(':')
@@ -27,9 +27,12 @@ if response[1] == 'NO':
         content = os.read(fd,1000)
         if len(content) == 0:
             break
-        payload = bytes(len(content)+':')+content
+        payload = bytes(str(len(content))+':')+content
         s.send(payload)
     print("Finished sending!")
+    pkg = "DONE"
+    msg = str(len(pkg))+':'+pkg
+    s.send(msg.encode())
 elif response[1] == 'YES':
     print("File already exists in server.")
 

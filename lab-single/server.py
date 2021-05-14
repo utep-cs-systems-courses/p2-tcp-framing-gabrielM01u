@@ -5,24 +5,26 @@ import socket, sys, re, os
 from threading import Thread, Lock
 
 
-sys.path.append("../lib")       # for params
-import params
+# sys.path.append("../lib")       # for params
+# import params
 
-switchesVarDefaults = (
-    (('-l', '--listenPort') ,'listenPort', 50001),
-    (('-?', '--usage'), "usage", False), # boolean (set if present)
-    )
+# switchesVarDefaults = (
+#     (('-l', '--listenPort') ,'listenPort', 50001),
+#     (('-?', '--usage'), "usage", False), # boolean (set if present)
+#     )
 
 
 lock = Lock()
-progname = "echoserver"
-paramMap = params.parseParams(switchesVarDefaults)
+listenPort = 50001
+listenAddr = ''
+# progname = "echoserver"
+# paramMap = params.parseParams(switchesVarDefaults)
 
-listenPort = paramMap['listenPort']
-listenAddr = ''       # Symbolic name meaning all available interfaces
+# listenPort = paramMap['listenPort']
+# listenAddr = ''       # Symbolic name meaning all available interfaces
 
-if paramMap['usage']:
-    params.usage()
+# if paramMap['usage']:
+#     params.usage()
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((listenAddr, listenPort))
@@ -37,27 +39,31 @@ def listener_thread(s,conn,addr, threadCount):
     data = conn.recv(1024).decode()
     while not data:   
         print("...")
+        data = conn.recv(1024).decode()
 
     print(data)
     
-    data = s.recv(1024).decode()
+    data = conn.recv(1024).decode()
     print(data)
     file_name = data[1]
-    if not os.path.isfile(file_name):
+    if not os.path.isfile('../lib/'+file_name):
         response = 'NO'
-        conn.send((len(response)+':'+response).encode())
+        conn.send(str((len(response))+':'+response).encode())
     
         fd = os.open(file_name, os.O_CREAT | os.O_WRONLY)
 
         while True:
             data = conn.recv(1024).decode().split(':')
-            if not data:
-                break
             len = data[0]
             payload = data[1]
-            lock.acquire()
-            os.write(fd, payload)
-            lock.release()
+            if len == len(payload):
+                lock.acquire()
+                os.write(fd, payload)
+                lock.release()
+            elif payload == "DONE":
+                break
+            else:
+                pass
         os.close(fd)
     else:
         response = 'YES'
