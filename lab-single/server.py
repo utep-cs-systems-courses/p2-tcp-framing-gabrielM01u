@@ -43,8 +43,8 @@ def listener_thread(s,conn,addr, threadCount):
 
     print(data)
     
-    data = conn.recv(1024).decode()
-    print(data)
+    data = data.split(':')
+   
     file_name = data[1]
     if not os.path.isfile('../lib/'+file_name):
         response = 'NO'
