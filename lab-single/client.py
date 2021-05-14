@@ -10,14 +10,14 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 
+filename = sys.argv[1]
 
-
-fd = os.open("test.txt", os.O_RDONLY|os.O_CREAT)
+fd = os.open(filename, os.O_RDONLY|os.O_CREAT)
 assert fd >= 0
 
 s.connect(('127.0.0.1',50001))
 
-fileRequest = s.send(('YO').encode())
+fileRequest = s.send((len(filename)+':'+filename).encode())
 
 response = s.recv(1024).decode()
 response = response.split(':')

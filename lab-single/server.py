@@ -2,7 +2,7 @@
 
 import socket, sys, re, os
 
-from threading import Thread
+from threading import Thread, Lock
 
 
 sys.path.append("../lib")       # for params
@@ -14,12 +14,12 @@ switchesVarDefaults = (
     )
 
 
-
+lock = Lock()
 progname = "echoserver"
 paramMap = params.parseParams(switchesVarDefaults)
 
 listenPort = paramMap['listenPort']
-listenAddr = '127.0.0.1'       # Symbolic name meaning all available interfaces
+listenAddr = ''       # Symbolic name meaning all available interfaces
 
 if paramMap['usage']:
     params.usage()
@@ -40,21 +40,25 @@ def listener_thread(s,conn,addr, threadCount):
 
     print(data)
     
-    # data = s.recv(1024).decode()
-    # print(data)
-    # file_name = data[1]
-    # if not os.path.isfile(file_name):
-    #     fd = os.open(file_name, os.O_CREAT | os.O_WRONLY)
+    data = s.recv(1024).decode()
+    print(data)
+    file_name = data[1]
+    if not os.path.isfile(file_name):
+        fd = os.open(file_name, os.O_CREAT | os.O_WRONLY)
 
-    #     while True:
-    #         data = conn.recv(1024).decode().split(':')
-    #         if not data:
-    #             break
-    #         len = data[0]
-    #         payload = data[1]
-    #         os.write(fd, payload)
-
-    #     os.close(fd)
+        while True:
+            data = conn.recv(1024).decode().split(':')
+            if not data:
+                break
+            len = data[0]
+            payload = data[1]
+            lock.acquire()
+            os.write(fd, payload)
+            lock.release()
+        os.close(fd)
+    else:
+        response = 'NO'
+        conn.send((len(response)+':'+response).encode())
     
     print("Disconnecting: " + addr[0])
     conn.close()
