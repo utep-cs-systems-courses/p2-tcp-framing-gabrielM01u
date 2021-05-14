@@ -48,7 +48,8 @@ def listener_thread(s,conn,addr, threadCount):
     file_name = data[1]
     if not os.path.isfile('../lib/'+file_name):
         response = 'NO'
-        conn.send(str((len(response))+':'+response).encode())
+        response = str(len(response)+':'+response)
+        conn.send(response.encode())
     
         fd = os.open(file_name, os.O_CREAT | os.O_WRONLY)
 
