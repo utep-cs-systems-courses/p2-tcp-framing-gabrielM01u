@@ -48,7 +48,7 @@ def listener_thread(s,conn,addr, threadCount):
     file_name = data[1]
     if not os.path.isfile('../lib/'+file_name):
         response = 'NO'
-        response = str(len(response)+':'+response)
+        response = str(2)+':'+response
         conn.send(response.encode())
     
         fd = os.open(file_name, os.O_CREAT | os.O_WRONLY)
@@ -68,7 +68,7 @@ def listener_thread(s,conn,addr, threadCount):
         os.close(fd)
     else:
         response = 'YES'
-        conn.send((len(response)+':'+response).encode())
+        conn.send((str(3)+':'+response).encode())
     
     print("Disconnecting: " + addr[0])
     conn.close()

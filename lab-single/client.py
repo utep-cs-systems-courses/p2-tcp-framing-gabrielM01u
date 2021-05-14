@@ -31,7 +31,7 @@ if response[1] == 'NO':
         s.send(payload)
     print("Finished sending!")
     pkg = "DONE"
-    msg = str(len(pkg))+':'+pkg
+    msg = str(4)+':'+pkg
     s.send(msg.encode())
 elif response[1] == 'YES':
     print("File already exists in server.")
