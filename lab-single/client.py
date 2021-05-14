@@ -28,7 +28,7 @@ if response[1] == 'NO':
         if len(content) == 0:
             break
         length = len(content)
-        payload = str(length)+':'+content
+        payload = str(length)+":"+content
         s.send(payload.encode())
     print("Finished sending!")
     pkg = "DONE"
