@@ -44,6 +44,9 @@ def listener_thread(s,conn,addr, threadCount):
     print(data)
     file_name = data[1]
     if not os.path.isfile(file_name):
+        response = 'NO'
+        conn.send((len(response)+':'+response).encode())
+    
         fd = os.open(file_name, os.O_CREAT | os.O_WRONLY)
 
         while True:
@@ -57,7 +60,7 @@ def listener_thread(s,conn,addr, threadCount):
             lock.release()
         os.close(fd)
     else:
-        response = 'NO'
+        response = 'YES'
         conn.send((len(response)+':'+response).encode())
     
     print("Disconnecting: " + addr[0])
