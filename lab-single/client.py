@@ -27,9 +27,9 @@ if response[1] == 'NO':
         content = os.read(fd,1000)
         if len(content) == 0:
             break
-        length = len(content)
-        payload = str(length)+":"+content
-        s.send(payload.encode())
+        length = len(content).encode()
+        payload = length+":".encode()+content
+        s.send(payload)
     print("Finished sending!")
     pkg = "DONE"
     msg = str(4)+':'+pkg
