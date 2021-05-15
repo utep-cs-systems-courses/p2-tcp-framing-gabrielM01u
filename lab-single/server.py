@@ -51,13 +51,13 @@ def listener_thread(s,conn,addr, threadCount):
         response = str(2)+':'+response
         conn.send(response.encode())
     
-        fd = os.open(file_name, os.O_CREAT | os.O_WRONLY)
+        fd = os.open('../lib/'+file_name, os.O_CREAT | os.O_WRONLY)
 
         while True:
             data = conn.recv(1024).decode().split(':')
-            len = data[0]
+            length = data[0]
             payload = data[1]
-            if len == len(payload):
+            if length == len(payload):
                 lock.acquire()
                 os.write(fd, payload)
                 lock.release()
